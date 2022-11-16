@@ -13,6 +13,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url='https://github.com/michael-neuhold/bdv-project',
     license='MIT',
-    packages=['pyMLaux'],
+    packages=['bdvlib'],
     install_requires=['numpy', 'pandas', 'sklearn', 'scipy', 'matplotlib', 'opencv-python'], # add/replace requirements here
 )
