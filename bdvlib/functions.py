@@ -21,6 +21,7 @@ from pyspark.ml.regression import RandomForestRegressor
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import DataFrame
 from typing import List
+import pyspark
 
 def get_test_value_1():
   return "Hello World - 1"
@@ -54,7 +55,7 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str],
 
   # split trainings and test data
   train, test = prepared_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
-  regressor = RandomForestRegressor(labelCol=target, featuresCol='scaledFeatures', 
+  regressor = pyspark.ml.regression.RandomForestRegressor(labelCol=target, featuresCol='scaledFeatures', 
                                     maxDepth=max_depth, maxBins=max_bins,
                                     numTrees=number_trees, featureSubsetStrategy=feature_subset_strategy)
 
@@ -83,11 +84,6 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str],
   print(f'Mean squared error (MSE) on test data = {mse}')
   print(f'Regression through the origin(R2) on test data = {r2}')
   print(f'Mean absolute error (MAE) on test data = {mae}')
-
-def __print_table(title, data):
-    print(title)
-    print(data.to_markdown())
-    print()
 
 def __print_table(title, data):
     print(title)
