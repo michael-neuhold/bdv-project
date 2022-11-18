@@ -35,8 +35,8 @@ def question_alcohol_sex_distribution(data):
 def random_forest_regressor(data: DataFrame, target: str, features: List[str],
                             trainings_split: float = 0.8, scale_features: bool = True, 
                             display_feature_count: int = 10, display_prediction_count: int = 10,
-                            max_depth: int = None, max_features: float = 1.0, 
-                            min_samples_split: float = 2.0, min_samples_leaf: float = 1.0):
+                            max_depth: int = 5, max_bins: int = 32,
+                            number_trees: int = 20, feature_subset_strategy: str = 'auto', ):
   # prepare data
   extracted_data = data[features + [target]]
   assembler = VectorAssembler(inputCols=features, outputCol='features')
@@ -45,7 +45,7 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str],
   # scale features
   if (scale_features):
     scaler = StandardScaler(inputCol='features', outputCol='scaledFeatures')
-    prepared_data = scaler.fit(prep_ml_data).transform(prep_ml_data)
+    prepared_data = scaler.fit(prepared_data).transform(prepared_data)
 
   # show features
   if (display_feature_count > 0):
@@ -53,10 +53,10 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str],
     __print_table('FEATURES', output)
 
   # split trainings and test data
-  train, test = prep_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
-  regressor = RandomForestRegressor(labelCol=target, featuresCol='scaledFeatures',
-                                    max_depth = max_depth, max_features = max_features,
-                                    min_samples_split = min_samples_split, min_samples_leaf = min_samples_leaf)
+  train, test = prepared_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
+  regressor = RandomForestRegressor(labelCol=target, featuresCol='scaledFeatures', 
+                                    maxDepth=max_depth, maxBins=max_bins,
+                                    numTrees=number_trees, featureSubsetStrategy=feature_subset_strategy)
 
   # train model
   model = regressor.fit(train)
@@ -79,10 +79,15 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str],
 
   # print evaluation result
   print('EVALUTION RESULTS')
-  print(f'Root Mean Squared Error (RMSE) on test data = {rmse}');
-  print(f'Mean squared error (MSE) on test data = {mse}');
-  print(f'Regression through the origin(R2) on test data = {r2}');
-  print(f'Mean absolute error (MAE) on test data = {mae}');
+  print(f'Root Mean Squared Error (RMSE) on test data = {rmse}')
+  print(f'Mean squared error (MSE) on test data = {mse}')
+  print(f'Regression through the origin(R2) on test data = {r2}')
+  print(f'Mean absolute error (MAE) on test data = {mae}')
+
+def __print_table(title, data):
+    print(title)
+    print(data.to_markdown())
+    print()
 
 def __print_table(title, data):
     print(title)
