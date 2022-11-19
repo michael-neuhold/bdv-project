@@ -33,6 +33,10 @@ def question_alcohol_sex_distribution(data):
   data.filter(data.Dalc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol during the week')
   data.filter(data.Walc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol on the weekend') 
 
+def question_alcohol_week_weekend_distribution(data):
+  data.filter(data.Dalc > 2).groupBy("Dalc").count().toPandas().plot.bar(x='Dalc', y='count', title='Drink a lot of alcohol during the week')
+  data.filter(data.Walc > 2).groupBy("Walc").count().toPandas().plot.bar(x='Walc', y='count', title='Drink a lot of alcohol on the weekend') 
+
 def random_forest_regressor(data: DataFrame, target: str, features: List[str],
                             trainings_split: float = 0.8, scale_features: bool = True, 
                             display_feature_count: int = 10, display_prediction_count: int = 10,
