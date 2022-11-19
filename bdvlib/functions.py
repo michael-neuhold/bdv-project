@@ -39,6 +39,12 @@ def question_alcohol_week_weekend_distribution(data):
 
 def question_alcohol_in_freetime(data):
   data.groupBy("freetime").count().toPandas().plot.bar(x='freetime', y='count', title='Alcohol consumption with high and low freetime')
+
+def question_alcohol_health_status(data):
+  data.groupBy("health").count().toPandas().plot.bar(x='health', y='count', title='Alcohol consumption correlating with health??')
+
+def question_alcohol_romantic_relationship_status(data):
+  data.groupBy("romantic").count().toPandas().plot.bar(x='romantic', y='count', title='Alcohol consumption correlating with romantic relationship status??')
   
 def random_forest_regressor(data: DataFrame, target: str, features: List[str],
                             trainings_split: float = 0.8, scale_features: bool = True, 
