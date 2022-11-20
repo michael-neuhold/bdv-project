@@ -47,7 +47,7 @@ def question_alcohol_health_status(data):
 def question_alcohol_romantic_relationship_status(data):
   data.groupBy("romantic").count().toPandas().plot.bar(x='romantic', y='count', title='Alcohol consumption correlating with romantic relationship status??')
 
-def question_health_absences_correlation():
+def question_health_absences_correlation(data):
   fig = plt.figure(figsize=(20, 8))
   fig.suptitle('Health / Absences')
   for i in range(1, 6):
