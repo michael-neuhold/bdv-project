@@ -46,6 +46,14 @@ def question_alcohol_health_status(data):
 
 def question_alcohol_romantic_relationship_status(data):
   data.groupBy("romantic").count().toPandas().plot.bar(x='romantic', y='count', title='Alcohol consumption correlating with romantic relationship status??')
+
+def question_health_absences_correlation():
+  fig = plt.figure(figsize=(20, 8))
+  fig.suptitle('Health / Absences')
+  for i in range(1, 6):
+    fig.add_subplot(1, 5, i)
+    plt.title(f'Health {i}')
+    sns.boxplot(data=data.filter(data.health == i).select('absences').toPandas())
   
 def random_forest_regressor(data: DataFrame, target: str, features: List[str], text_features: List[str] = [],
                             trainings_split: float = 0.8, prepare_features: bool = True, 
