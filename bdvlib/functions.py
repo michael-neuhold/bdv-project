@@ -24,6 +24,8 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import DataFrame
 from typing import List
 
+import seaborn as sns
+
 def get_test_value_1():
   return "Hello World - 1"
 
