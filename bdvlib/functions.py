@@ -52,19 +52,9 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str], t
                             display_feature_count: int = 10, display_prediction_count: int = 10,
                             max_depth: int = 5, max_bins: int = 32,
                             number_trees: int = 20, feature_subset_strategy: str = 'auto', ):
-  # prepare data
-  prepared_data = data[features + [target]]
-  if (prepare_features):
-    indexers = list(map(lambda x: StringIndexer(inputCol=x, outputCol='idx_{0}'.format(x)), text_features))
-    assembler = VectorAssembler(inputCols=[x for x in features if x not in text_features] + list(map(lambda x: 'idx_{0}'.format(x), text_features)), outputCol='features_assembled')
-    scaler = StandardScaler(inputCol='features_assembled', outputCol='prepared_features')
-    pipeline = Pipeline(stages=indexers + [assembler, scaler])
-    prepared_data = pipeline.fit(prepared_data).transform(prepared_data)
-
-  # show features
-  if (display_feature_count > 0):
-    output = prepared_data.limit(display_feature_count).toPandas()
-    __print_table('FEATURES', output)
+  # preapre and visualize data
+  prepared_data = __prepare_data(data, target, features, text_features, prepare_features, 
+                                  display_feature_count, display_prediction_count)
 
   # split trainings and test data
   train, test = prepared_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
@@ -97,6 +87,59 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str], t
   print(f'Mean squared error (MSE) on test data = {mse}')
   print(f'Regression through the origin(R2) on test data = {r2}')
   print(f'Mean absolute error (MAE) on test data = {mae}')
+
+def random_forest_classifier(data: DataFrame, target: str, features: List[str], text_features: List[str] = [],
+                             trainings_split: float = 0.8, prepare_features: bool = True, 
+                             display_feature_count: int = 10, display_prediction_count: int = 10,
+                             max_depth: int = 5, max_bins: int = 32,
+                             number_trees: int = 20, feature_subset_strategy: str = 'auto', ):
+  # preapre and visualize data
+  prepared_data = __prepare_data(data, target, features, text_features, prepare_features, 
+                                  display_feature_count, display_prediction_count)
+
+  # split trainings and test data
+  train, test = prepared_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
+  regressor = RandomForestClassifier(labelCol=target, featuresCol='prepared_features', 
+                                    maxDepth=max_depth, maxBins=max_bins,
+                                    numTrees=number_trees, featureSubsetStrategy=feature_subset_strategy)
+
+  # train model
+  model = regressor.fit(train)
+
+  # prediction
+  prediction = model.transform(test)
+  if (display_prediction_count > 0):
+    output = prediction \
+    .select(['prediction', target, 'prepared_features']) \
+    .limit(display_prediction_count) \
+    .toPandas()
+    __print_table_('PREDICTIONS', output)
+
+  # evaluation
+  y_true = prediction.select([target]).collect()
+  y_pred = prediction.select(['prediction']).collect()
+
+  # print evaluation result
+  print('EVALUTION RESULTS')
+  print(classification_report(y_true, y_pred))
+
+def __prepare_data(data: DataFrame, target: str, features: List[str], text_features: List[str], 
+                   prepare_features: bool, display_feature_count: int, display_prediction_count: int):
+  # prepare
+  prepared_data = data[features + [target]]
+  if (prepare_features):
+    indexers = list(map(lambda x: StringIndexer(inputCol=x, outputCol='idx_{0}'.format(x)), text_features))
+    assembler = VectorAssembler(inputCols=[x for x in features if x not in text_features] + list(map(lambda x: 'idx_{0}'.format(x), text_features)), outputCol='features_assembled')
+    scaler = StandardScaler(inputCol='features_assembled', outputCol='prepared_features')
+    pipeline = Pipeline(stages=indexers + [assembler, scaler])
+    prepared_data = pipeline.fit(prepared_data).transform(prepared_data)
+
+  # show features
+  if (display_feature_count > 0):
+    output = prepared_data.limit(display_feature_count).toPandas()
+    __print_table_('FEATURES', output)
+
+  return prepared_data
 
 def __print_table(title, data):
     print(title)
