@@ -15,6 +15,7 @@ from os import path
 import struct
 from array import array
 
+import pyspark
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.feature import StandardScaler
 from pyspark.ml.feature import StringIndexer
