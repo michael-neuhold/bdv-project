@@ -15,7 +15,6 @@ from os import path
 import struct
 from array import array
 
-import pyspark
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.feature import StandardScaler
 from pyspark.ml.feature import StringIndexer
@@ -69,7 +68,7 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str], t
 
   # split trainings and test data
   train, test = prepared_data.randomSplit([trainings_split, 1 - trainings_split], seed=0)
-  regressor = pyspark.ml.regression.RandomForestRegressor(labelCol=target, featuresCol='prepared_features', 
+  regressor = RandomForestRegressor(labelCol=target, featuresCol='prepared_features', 
                                     maxDepth=max_depth, maxBins=max_bins,
                                     numTrees=number_trees, featureSubsetStrategy=feature_subset_strategy)
 
