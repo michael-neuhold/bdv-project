@@ -31,8 +31,8 @@ def question_alcohol_sex_distribution(data):
   data.filter(data.Walc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol on the weekend') 
 
 def question_alcohol_week_weekend_distribution(data):
-  data.filter(data.Dalc > 2).groupBy("Dalc").count().toPandas().plot.bar(x='Dalc', y='count', title='Drink a lot of alcohol during the week')
-  data.filter(data.Walc > 2).groupBy("Walc").count().toPandas().plot.bar(x='Walc', y='count', title='Drink a lot of alcohol on the weekend') 
+  data.filter.groupBy("Dalc").count().toPandas().plot.bar(x='Dalc', y='count', title='Drink a lot of alcohol during the week')
+  data.filter.groupBy("Walc").count().toPandas().plot.bar(x='Walc', y='count', title='Drink a lot of alcohol on the weekend') 
 
 def question_alcohol_in_freetime(data):
   data.groupBy("freetime").count().toPandas().plot.bar(x='freetime', y='count', title='Alcohol consumption with high and low freetime')
