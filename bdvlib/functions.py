@@ -53,6 +53,9 @@ def question_alcohol_parents_education(data):
   data.groupBy("Medu").count().toPandas().plot.bar(x='Medu', y='count', title='Alcohol consuption correlated with mothers education?')
   data.groupBy("Fedu").count().toPandas().plot.bar(x='Fedu', y='count', title='Alcohol consuption correlated with fathers education?') 
 
+def question_alcohol_number_of_school_absences(data):
+  data.groupBy("absences").count().toPandas().plot.bar(x='absences', y='count', title='Does the number of school absences correlate with alcohol consumption?')
+
 def question_health_absences_correlation(data):
   fig = plt.figure(figsize=(20, 8))
   fig.suptitle('Health / Absences')
