@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='bdvlib',
-    version='0.1.1',
+    version='0.1.2',
     author='Michael Neuhold',
     author_email='S2110454008@students.fh-hagenberg.at',
     description='...',

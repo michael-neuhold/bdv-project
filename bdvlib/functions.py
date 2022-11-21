@@ -83,7 +83,7 @@ def random_forest_regressor(data: DataFrame, target: str, features: List[str], t
     .select(['prediction', target, 'prepared_features']) \
     .limit(display_prediction_count) \
     .toPandas()
-    __print_table('PREDICTIONS', output)
+    __print_table_('PREDICTIONS', output)
 
   # evaluation
   evaluator = RegressionEvaluator(predictionCol='prediction', labelCol=target)  
