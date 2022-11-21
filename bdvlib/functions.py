@@ -1,7 +1,7 @@
 # import the necessary packages
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error, r2_score, classification_report
 import matplotlib.pyplot as plt
 import cv2
 
