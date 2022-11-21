@@ -124,7 +124,7 @@ def random_forest_classifier(data: DataFrame, target: str, features: List[str], 
     .select(['prediction', target, 'prepared_features']) \
     .limit(display_prediction_count) \
     .toPandas()
-    __print_table('PREDICTIONS', output)
+    __print_table_('PREDICTIONS', output)
 
   # evaluation
   y_true = prediction.select([target]).collect()
@@ -148,11 +148,11 @@ def __prepare_data(data: DataFrame, target: str, features: List[str], text_featu
   # show features
   if (display_feature_count > 0):
     output = prepared_data.limit(display_feature_count).toPandas()
-    __print_table('FEATURES', output)
+    __print_table_('FEATURES', output)
 
   return prepared_data
 
-def __print_table(title, data):
+def __print_table_(title, data):
     print(title)
     print(data.to_markdown())
     print()
