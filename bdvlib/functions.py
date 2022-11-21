@@ -21,6 +21,7 @@ from pyspark.ml.feature import StringIndexer
 from pyspark.ml.pipeline import Pipeline
 from pyspark.ml.regression import RandomForestRegressor
 from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.ml.classification import RandomForestClassifier
 from pyspark.sql import DataFrame
 from typing import List
 
