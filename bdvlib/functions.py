@@ -26,12 +26,6 @@ from typing import List
 
 import seaborn as sns
 
-def get_test_value_1():
-  return "Hello World - 1"
-
-def get_test_value_2():
-  return "Hello World - 2"
-
 def question_alcohol_sex_distribution(data):
   data.filter(data.Dalc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol during the week')
   data.filter(data.Walc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol on the weekend') 
