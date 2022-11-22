@@ -27,6 +27,7 @@ from typing import List
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 def correlate_class_boxplot(data: DataFrame, xAttr: str, yAttr: str, first: int, last: int, title: str = None, size = (15, 5)):
   fig = plt.figure(figsize=size)
