@@ -38,7 +38,7 @@ def correlate_class_boxplot(data: DataFrame, xAttr: str, yAttr: str, first: int,
     fig.add_subplot(1, last - first + 1, i if first > 0 else i + 1)
     plt.title(f'{xAttr} {i}')
     if ylim != None:
-      plt.ylim(ylim[0], 40)
+      plt.ylim(ylim[0], ylim[1])
     sns.boxplot(data=data.filter(getattr(data, xAttr) == i).select(yAttr).toPandas())
 
 def question_alcohol_sex_distribution(data):
