@@ -29,7 +29,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-def correlate_class_boxplot(data: DataFrame, xAttr: str, yAttr: str, first: int, last: int, title: str = None, size = (15, 5)):
+def correlate_class_boxplot(data: DataFrame, xAttr: str, yAttr: str, first: int, last: int, title: str = None, size = (15, 5), ylim = None):
   fig = plt.figure(figsize=size)
   if title == None:
     title = f'{xAttr.capitalize()} / {yAttr.capitalize()}'
@@ -53,7 +53,7 @@ def question_alcohol_sex_distribution(data):
 
 def question_alcohol_week_weekend_distribution(data):
   plt.figure()
-  plt.title('Alcohol consumption correlating with sex')
+  plt.title('Do students drink more during workdays or the weekend?')
   sns.barplot(data=data.select('Dalc').groupBy('Dalc').count().toPandas(), x="Dalc", y='count', color='red', alpha=0.75)
   sns.barplot(data=data.select('Walc').groupBy('Walc').count().toPandas(), x="Walc", y='count', color='green', alpha=0.75)
   red_patch = mpatches.Patch(color='red', label='Dalc')
