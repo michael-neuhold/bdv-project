@@ -26,30 +26,85 @@ from pyspark.sql import DataFrame
 from typing import List
 
 import seaborn as sns
+import matplotlib.pyplot as plt
+
+def correlate_class_boxplot(data: DataFrame, xAttr: str, yAttr: str, first: int, last: int, title: str = None, size = (15, 5)):
+  fig = plt.figure(figsize=size)
+  if title == None:
+    title = f'{xAttr.capitalize()} / {yAttr.capitalize()}'
+  fig.suptitle(title)
+  for i in range(first, last + 1):
+    fig.add_subplot(1, last - first + 1, i if first > 0 else i + 1)
+    plt.title(f'{xAttr} {i}')
+    if ylim != None:
+      plt.ylim(ylim[0], 40)
+    sns.boxplot(data=data.filter(getattr(data, xAttr) == i).select(yAttr).toPandas())
 
 def question_alcohol_sex_distribution(data):
-  data.filter(data.Dalc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol during the week')
-  data.filter(data.Walc > 2).groupBy("sex").count().toPandas().plot.bar(x='sex', y='count', title='Drink a lot of alcohol on the weekend') 
+  plt.figure()
+  plt.title('Alcohol consumption correlating with sex')
+  sns.barplot(data=data.select('Dalc', 'sex').groupBy('Dalc', 'sex').count().toPandas(), x="Dalc", y='count', hue="sex", palette=['red', 'blue'], alpha=0.75)
+  ax = sns.barplot(data=data.select('Walc', 'sex').groupBy('Walc', 'sex').count().toPandas(), x="Walc", y='count', hue="sex", palette=['orange', 'violet'], alpha=0.75)
+  h, l = ax.get_legend_handles_labels()
+  ax.legend(h, ['Dalc M', 'Dalc F', 'Walc M', 'Walc F'])
+  plt.xlabel('Dalc/Walc')
+  plt.show()
 
 def question_alcohol_week_weekend_distribution(data):
-  data.groupBy("Dalc").count().toPandas().plot.bar(x='Dalc', y='count', title='Drink a lot of alcohol during the week')
-  data.groupBy("Walc").count().toPandas().plot.bar(x='Walc', y='count', title='Drink a lot of alcohol on the weekend') 
+  plt.figure()
+  plt.title('Alcohol consumption correlating with sex')
+  sns.barplot(data=data.select('Dalc').groupBy('Dalc').count().toPandas(), x="Dalc", y='count', color='red', alpha=0.75)
+  sns.barplot(data=data.select('Walc').groupBy('Walc').count().toPandas(), x="Walc", y='count', color='green', alpha=0.75)
+  red_patch = mpatches.Patch(color='red', label='Dalc')
+  green_patch = mpatches.Patch(color='green', label='Walc')
+  plt.legend(handles=[red_patch, green_patch])
+  plt.xlabel('Dalc/Walc')
+  plt.show()
 
 def question_alcohol_in_freetime(data):
-  data.groupBy("freetime").count().toPandas().plot.bar(x='freetime', y='count', title='Alcohol consumption with high and low freetime')
+  plt.figure()
+  plt.title('Alcohol consumption correlating with freetime')
+  sns.barplot(data=data.select('Dalc', 'freetime').groupBy('Dalc', 'freetime').count().toPandas(), x="freetime", y='count', hue="Dalc")
+  plt.show()
+  plt.figure()
+  plt.title('Alcohol consumption correlating with freetime')
+  sns.barplot(data=data.select('Walc', 'freetime').groupBy('Walc', 'freetime').count().toPandas(), x="freetime", y='count', hue="Walc")
+  plt.show()
 
 def question_alcohol_health_status(data):
-  data.groupBy("health").count().toPandas().plot.bar(x='health', y='count', title='Alcohol consumption correlating with health??')
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'health').groupBy('Dalc', 'health').count().toPandas(), x="health", y='count', hue="Dalc")
+  plt.show()
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'health').groupBy('Dalc', 'health').count().toPandas(), x="Dalc", y='count', hue="health")
+  plt.show()
 
 def question_alcohol_romantic_relationship_status(data):
-  data.groupBy("romantic").count().toPandas().plot.bar(x='romantic', y='count', title='Alcohol consumption correlating with romantic relationship status??')
+  plt.figure()
+  plt.title('Alcohol consumption correlating with romantic relationship status')
+  sns.barplot(data=data.select('Dalc', 'romantic').groupBy('Dalc', 'romantic').count().toPandas(), x="Dalc", y='count', hue="romantic", palette=['red', 'blue'], alpha=0.75)
+  ax = sns.barplot(data=data.select('Walc', 'romantic').groupBy('Walc', 'romantic').count().toPandas(), x="Walc", y='count', hue="romantic", palette=['orange', 'violet'], alpha=0.75)
+  h, l = ax.get_legend_handles_labels()
+  ax.legend(h, ['Dalc no', 'Dalc yes', 'Walc no', 'Walc yes'])
+  plt.xlabel('Dalc/Walc')
+  plt.show()
 
 def question_alcohol_parents_education(data):
-  data.groupBy("Medu").count().toPandas().plot.bar(x='Medu', y='count', title='Alcohol consuption correlated with mothers education?')
-  data.groupBy("Fedu").count().toPandas().plot.bar(x='Fedu', y='count', title='Alcohol consuption correlated with fathers education?') 
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'Medu').groupBy('Medu').mean('Dalc').toPandas(), x='Medu', y='avg(Dalc)')
+  plt.show()
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'Medu').groupBy('Dalc', 'Medu').count().toPandas(), x="Medu", y='count', hue="Dalc")
+  plt.show()
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'Fedu').groupBy('Fedu').mean('Dalc').toPandas(), x='Fedu', y='avg(Dalc)')
+  plt.show()
+  plt.figure()
+  sns.barplot(data=data.select('Dalc', 'Fedu').groupBy('Dalc', 'Fedu').count().toPandas(), x="Fedu", y='count', hue="Dalc")
+  plt.show()
 
 def question_alcohol_number_of_school_absences(data):
-  data.groupBy("absences").count().toPandas().plot.bar(x='absences', y='count', title='Does the number of school absences correlate with alcohol consumption?')
+  correlate_class_boxplot(data, 'health', 'absences', 1, 5)
 
 def question_health_absences_correlation(data):
   fig = plt.figure(figsize=(20, 8))
